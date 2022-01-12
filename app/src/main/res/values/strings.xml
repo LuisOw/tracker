@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">Tracker 3</string>
+    <string name="consent_string">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Nunc pharetra dui non velit venenatis bibendum. Suspendisse convallis sollicitudin pretium.
+        Donec eu urna nibh. Nunc ac purus non diam faucibus fringilla.
+        Maecenas imperdiet laoreet orci nec euismod. Vestibulum nulla nisl,
+        sagittis fringilla congue id, cursus et ante. Donec elit elit, mollis sed magna id,
+        porta fringilla lacus. Nunc nisi turpis, euismod a eros a, consequat sollicitudin sapien.
+        Pellentesque sagittis eu diam pretium posuere. Etiam nec porta justo.
+        Ut dignissim ex a feugiat vulputate. Nunc finibus lacus vel est suscipit, at semper neque placerat.
+        Duis eu ullamcorper odio. Maecenas finibus libero et nunc maximus blandit.
+        Nam nibh massa, blandit in purus sit amet, rutrum volutpat massa. Fusce luctus porttitor eros,
+        ac feugiat metus placerat eu. Phasellus non magna tincidunt, tincidunt lectus id,
+        tincidunt erat. Donec a lorem interdum, faucibus nunc quis, dignissim turpis.
+        Vestibulum eu sapien malesuada, congue felis vel, maximus purus. Maecenas volutpat nisi felis,
+        ac aliquam ligula consectetur eget. Duis sed turpis varius, ultricies urna ac, rhoncus dui.
+        Maecenas pellentesque dictum faucibus. In non quam ut purus mattis interdum.
+        Quisque molestie orci at dui dignissim, ac laoreet odio luctus. Phasellus nunc diam,
+        convallis sit amet quam at, aliquet scelerisque nisi. Duis tortor ipsum,
+        ultrices eu ultricies sed, luctus vel turpis.
+        In pharetra imperdiet sem a efficitur. Maecenas mauris nisl, tempus et erat eget,
+        lacinia viverra diam. Morbi hendrerit suscipit sem, id ultricies orci condimentum et.
+        Pellentesque turpis sem, mollis ut eros quis, vulputate auctor sem. Pellentesque ullamcorper,
+        metus nec mattis vestibulum, nunc risus mattis ex, eu vehicula nulla quam sed justo.
+        Duis nec finibus mi. Praesent fermentum fermentum magna ut molestie. Quisque a orci eros.
+        Ut eleifend erat ut diam faucibus condimentum.
+        Donec gravida urna in leo accumsan, quis sollicitudin felis scelerisque. Morbi id felis lacus.
+        Curabitur nisi velit, condimentum accumsan quam ut, eleifend efficitur elit.
+        Quisque viverra nulla a leo placerat, ut vulputate sem pretium. Etiam feugiat fermentum est.
+        Nunc nec faucibus ipsum. Nullam pretium, eros eget tincidunt efficitur,
+        ex elit malesuada sem, id tempor justo orci malesuada justo.
+        Sed sit amet libero cursus elit lobortis tempus. Vestibulum non mollis odio,
+        sed scelerisque tortor.
+        Donec suscipit ultricies mauris,
+        ut blandit lorem sodales nec. Nam sed dignissim enim.
+        Praesent eget tellus quis nunc faucibus tristique.
+        Praesent a enim at tortor feugiat aliquam ac quis tortor. Curabitur luctus,
+        diam quis tempus porta, risus turpis efficitur felis, sed posuere elit lectus non arcu.
+        Curabitur arcu nulla, elementum sed arcu a, ultrices vehicula metus.
+        Suspendisse id ligula ante. Duis maximus commodo lectus et pulvinar. Etiam ex quam,
+        lacinia in velit eget, commodo sollicitudin ligula. Etiam gravida pretium purus,
+        et consectetur purus pulvinar sed. Nullam lobortis nisi sit amet leo tempor,
+        nec placerat sem bibendum. Praesent varius, turpis in lobortis lacinia,
+        nibh turpis aliquet lacus, ac cursus lorem tellus sit amet magna.
+        Phasellus sed lacus pellentesque, auctor tortor ac, tincidunt neque.
+ </string>
+    <string name="view">View</string>
+    <string name="recusar">Recusar</string>
+    <string name="aceitar">Aceitar</string>
+    <string name="cpf">CPF</string>
+    <string name="password">Senha</string>
+    <string name="login">Acessar</string>
+    <string name="cpf_hint">xxx.xxx.xxx-xx</string>
+    <string name="pass_forgot">Esqueci minha senha</string>
+    <string name="participant_name">Qual nome você prefere usar?</string>
+    <string name="gender_identity">Identidade de gênero, como você se identifica?</string>
+    <string-array name="idendity_options">
+        <item>Prefiro não responder</item>
+        <item>Mulher cis</item>
+        <item>Homem cis</item>
+        <item>Mulher trans</item>
+        <item>Homem trans</item>
+        <item>Não binária</item>
+        <item>Outro</item>
+    </string-array>
+    <string name="states_text">Em qual estado você mora?</string>
+    <string-array name="states_options">
+        <item>Acre</item>
+        <item>Alagoas</item>
+        <item>Amapá</item>
+        <item>Amazonas</item>
+        <item>Bahia</item>
+        <item>Ceará</item>
+        <item>Distrito Federal</item>
+        <item>Espírito Santo</item>
+        <item>Goiás</item>
+        <item>Maranhão</item>
+        <item>Mato Grosso</item>
+        <item>Mato Grosso do Sul</item>
+        <item>Minas Gerais</item>
+        <item>Pará</item>
+        <item>Paraíba</item>
+        <item>Paraná</item>
+        <item>Pernambuco</item>
+        <item>Piauí</item>
+        <item>Rio de Janeiro</item>
+        <item>Rio Grande do Norte</item>
+        <item>Rio Grande do Sul</item>
+        <item>Rondônia</item>
+        <item>Roraima</item>
+        <item>Santa Catarina</item>
+        <item>São Paulo</item>
+        <item>Sergipe</item>
+        <item>Tocantins</item>
+    </string-array>
+    <string name="email_text">E-mail</string>
+    <string name="new_account">Criar conta</string>
+
+
+</resources>

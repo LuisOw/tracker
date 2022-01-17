@@ -96,6 +96,9 @@
     </string-array>
     <string name="email_text">E-mail</string>
     <string name="new_account">Criar conta</string>
+    <string name="config">Configurações</string>
+    <string name="log_out">Log out</string>
+    <string name="infos">Informações</string>
 
 
 </resources>

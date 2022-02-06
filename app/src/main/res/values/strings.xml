@@ -97,8 +97,12 @@
     <string name="email_text">E-mail</string>
     <string name="new_account">Criar conta</string>
     <string name="config">Configurações</string>
-    <string name="log_out">Log out</string>
+    <string name="logout">Log out</string>
     <string name="infos">Informações</string>
+    <string name="create">Criar conta</string>
+    <string name="cancel">Cancelar</string>
+    <string name="com_auth0_client_id">dfmZCOmBbG0eb7Wp2kuMCmXeVdq2fX0O</string>
+    <string name="com_auth0_domain">dev-tepbuwil.us.auth0.com</string>
 
 
 </resources>

@@ -1,63 +1,61 @@
 package com.example.tracker3;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tracker3.util.VolleyCallback;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
+public class CreateAccount extends AppCompatActivity {
+    private static final String BASE_URL = "http://a0e6-2804-14d-baa2-9559-8e8c-2ca-ab51-eddd.ngrok.io";
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-    private static final String BASE_URL ="http://a0e6-2804-14d-baa2-9559-8e8c-2ca-ab51-eddd.ngrok.io";
-
-    private String url;
     private TextView textView;
+    private String jwtToken;
     private EditText userName;
     private EditText password;
-    private String jwtToken;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.account_creation);
         userName = findViewById(R.id.et_username);
         password = findViewById(R.id.et_password);
         textView = findViewById(R.id.message);
-
     }
 
-    public void access(View view) {
-        verifyAccountInformation(result -> {
+    public void create(View view) {
+        createAccount(result -> {
             jwtToken = result;
-            Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
+            Toast.makeText(this, "Conta criada" + jwtToken, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CreateAccount.this, MainActivity.class);
             startActivity(intent);
         });
     }
 
-    public void verifyAccountInformation(final VolleyCallback callback) {
+    public void cancel(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void createAccount(VolleyCallback callback){
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, BASE_URL + "/login",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, BASE_URL + "/create",
                 callback::onSucess,
-                error -> textView.setText("Unable to login")) {
+                error -> textView.setText("Unable to create account")) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -67,13 +65,5 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         queue.add(stringRequest);
-    }
-
-    public void passForgot(View view) {
-    }
-
-    public void accountCreate(View view) {
-        Intent intent = new Intent(this, CreateAccount.class);
-        startActivity(intent);
     }
 }

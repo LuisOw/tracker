@@ -14,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tracker3.util.ClickListener;
+
 import java.util.ArrayList;
 import java.util.UUID;
 

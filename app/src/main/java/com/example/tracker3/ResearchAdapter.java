@@ -5,12 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.ref.WeakReference;
+import com.example.tracker3.util.ClickListener;
+
 import java.util.List;
 
 // Create the basic adapter extending from RecyclerView.Adapter
@@ -41,7 +41,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         TextView textView = holder.nameTextView;
         textView.setText(research.getId().toString());
         Button button = holder.researchButton;
-        button.setText("Simple test");
+        button.setText("Abrir");
         button.setEnabled(true);
     }
 

@@ -1,8 +1,11 @@
 package com.example.tracker3;
 
 
+import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -43,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.et_password);
         textView = findViewById(R.id.message);
 
+        if (!checkUsageStatsPermission()) {
+            startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+        }
     }
 
     public void access(View view) {
@@ -51,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
             startActivity(intent);
         });
+        /* TODO remove after validation it's complete */
+        Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
+        startActivity(intent);
     }
 
     public void verifyAccountInformation(final VolleyCallback callback) {
@@ -75,5 +84,13 @@ public class MainActivity extends AppCompatActivity {
     public void accountCreate(View view) {
         Intent intent = new Intent(this, CreateAccount.class);
         startActivity(intent);
+    }
+
+    private boolean checkUsageStatsPermission() {
+        AppOpsManager appOps = (AppOpsManager)
+                getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(), getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
     }
 }

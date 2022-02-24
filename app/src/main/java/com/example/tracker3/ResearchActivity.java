@@ -16,11 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tracker3.util.ClickListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class ResearchActivity extends AppCompatActivity implements ClickListener {
 
+    private static final String TAG = "ResearchActivity";
     ArrayList<Research> researches;
     private Toolbar toolbar;
 
@@ -40,16 +44,47 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
 
     }
 
-    //TODO
-    void getData(UUID researchId, int position) {
-        Toast.makeText(getApplicationContext(), "Research ID = " + researchId + "position = "
-                + position, Toast.LENGTH_SHORT).show();
+    void getData(UUID researchId) {
+        try {
+            JSONObject retreivedData = new JSONObject(generateJson());
+            Intent intent = new Intent(ResearchActivity.this, PresentedResearch.class);
+            intent.putExtra("json", retreivedData.toString());
+            Toast.makeText(getApplicationContext(), "Http request with id = " + researchId,
+                    Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Deu ruim fi" +
+                    researchId, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String generateJson() {
+        return "{" +
+                "\"usageTimeCapture\": \"true\"," +
+                "\"researches\": [\n" +
+                "      {\n" +
+                "        \"type\": \"multiple_choice\",\n" +
+                "        \"question\": \"primeira pergunta\",\n" +
+                "        \"answers\": [\n" +
+                "          \"string1\",\n" +
+                "          \"string2\",\n" +
+                "          \"string3\"\n" +
+                "        ]\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"type\": \"other\",\n" +
+                "        \"question\": \"pergunta 14\"\n" +
+                "      }" +
+                "    ]\n" +
+                "  }" +
+                "}";
     }
 
     @Override
     public void onPositionClick(int position) {
         //TODO the logic behind retrieve data.
-        getData(researches.get(position).getId(), position);
+        getData(researches.get(position).getId());
     }
 
     @Override

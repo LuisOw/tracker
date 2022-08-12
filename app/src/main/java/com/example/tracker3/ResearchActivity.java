@@ -14,12 +14,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tracker3.util.ClickListener;
+import com.example.tracker3.util.HttpRequest;
+import com.example.tracker3.util.VolleyCallback;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ResearchActivity extends AppCompatActivity implements ClickListener {
@@ -27,12 +37,21 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
     private static final String TAG = "ResearchActivity";
     ArrayList<Research> researches;
     private Toolbar toolbar;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.active_researches);
+        ObjectMapper mapper = new ObjectMapper();
+        Intent intent = getIntent();
+        /*try {
+            user = mapper.readValue(intent.getStringExtra("json"), User.class);
+        } catch (JsonProcessingException e) {
+            Toast.makeText(getApplicationContext(), "Unable to retrieve research with id",
+                    Toast.LENGTH_SHORT).show();
+        }*/
 
+        setContentView(R.layout.active_researches);
         RecyclerView rvResearches = findViewById(R.id.rv_research);
         researches = Research.createResearchesList(20);
         ResearchAdapter adapter = new ResearchAdapter(researches, this);
@@ -46,9 +65,10 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
 
     void getData(UUID researchId) {
         try {
-            JSONObject retreivedData = new JSONObject(generateJson());
+            JSONObject retrievedData = new JSONObject(generateJson());
+            /*this.retrieveData(user.jwtToken, researchId, callback);*/
             Intent intent = new Intent(ResearchActivity.this, PresentedResearch.class);
-            intent.putExtra("json", retreivedData.toString());
+            intent.putExtra("json", retrievedData.toString());
             Toast.makeText(getApplicationContext(), "Http request with id = " + researchId,
                     Toast.LENGTH_SHORT).show();
             startActivity(intent);
@@ -58,6 +78,24 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
                     researchId, Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void retrieveData(String jwtToken, UUID userId, UUID researchId, VolleyCallback callback) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, HttpRequest.BASE_URL
+                + String.format("/%s/research/%s", userId, researchId),
+                callback::onSuccess,
+                error -> Toast.makeText(this, "Unable to retrieve data", Toast.LENGTH_SHORT)
+                        .show()) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("jwtToken", jwtToken);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
 
     private String generateJson() {
         return "{" +

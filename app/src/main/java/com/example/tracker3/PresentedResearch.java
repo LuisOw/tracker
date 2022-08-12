@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class PresentedResearch extends AppCompatActivity {
@@ -40,12 +41,12 @@ public class PresentedResearch extends AppCompatActivity {
         }
     }
 
-    private void presentResearch(JSONObject retreivedData) throws JSONException {
+    private void presentResearch(JSONObject retrievedData) throws JSONException {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        JSONArray array = retreivedData.getJSONArray("researches");
+        JSONArray array = retrievedData.getJSONArray("researches");
         JSONObject obj;
         for (int i = 0; i < array.length(); i++) {
             obj = array.getJSONObject(i);
@@ -55,7 +56,7 @@ public class PresentedResearch extends AppCompatActivity {
                 createDiscursiveView(obj, params, linearLayout);
             }
         }
-        if (retreivedData.getBoolean("usageTimeCapture")) {
+        if (retrievedData.getBoolean("usageTimeCapture")) {
             activateUsageTimeCapture(params, linearLayout);
         }
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -81,15 +82,15 @@ public class PresentedResearch extends AppCompatActivity {
         Map<String, UsageStats> lUsageStatsMap = mUsageStatsManager.
                 queryAndAggregateUsageStats(startMillis, endMillis);
 
-        String aws = "";
+        StringBuilder aws = new StringBuilder();
         Set<String> lUsageSet = lUsageStatsMap.keySet();
         for (String name : lUsageSet) {
-            if (lUsageStatsMap.get(name).getTotalTimeInForeground() > 0) {
-                aws = aws + name + ": ";
-                aws = aws + timeConvert(lUsageStatsMap.get(name).getTotalTimeInForeground()) + "\n";
+            if (Objects.requireNonNull(lUsageStatsMap.get(name)).getTotalTimeInForeground() > 0) {
+                aws.append(name).append(": ");
+                aws.append(timeConvert(lUsageStatsMap.get(name).getTotalTimeInForeground())).append("\n");
             }
         }
-        mUsageTime.setText(aws);
+        mUsageTime.setText(aws.toString());
         linearLayout.addView(mUsageTime);
     }
 

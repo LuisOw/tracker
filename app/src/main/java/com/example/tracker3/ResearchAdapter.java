@@ -39,7 +39,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
-        textView.setText(research.getId().toString());
+        textView.setText(research.getName());
         Button button = holder.researchButton;
         button.setText("Abrir");
         button.setEnabled(true);

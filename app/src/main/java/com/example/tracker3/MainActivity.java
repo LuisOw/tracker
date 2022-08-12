@@ -6,33 +6,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.VolleyCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final String BASE_URL ="http://a0e6-2804-14d-baa2-9559-8e8c-2ca-ab51-eddd.ngrok.io";
 
-    private String url;
     private TextView textView;
     private EditText userName;
     private EditText password;
@@ -46,32 +43,34 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.et_password);
         textView = findViewById(R.id.message);
 
-        if (!checkUsageStatsPermission()) {
+    /*    if (!checkUsageStatsPermission()) {
             startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-        }
+        }*/
     }
 
     public void access(View view) {
-        verifyAccountInformation(result -> {
-            jwtToken = result;
+        String localUsername = userName.getText().toString();
+        String localPassword = password.getText().toString();
+     /*   this.verifyAccountInformation(localUsername, localPassword, result -> {
             Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
+            intent.putExtra("json", result);
             startActivity(intent);
-        });
+        });*/
         /* TODO remove after validation it's complete */
         Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
         startActivity(intent);
     }
 
-    public void verifyAccountInformation(final VolleyCallback callback) {
+    public void verifyAccountInformation(String userName, String password, final VolleyCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, BASE_URL + "/login",
-                callback::onSucess,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, HttpRequest.BASE_URL + "/login",
+                callback::onSuccess,
                 error -> textView.setText("Unable to login")) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("login", userName.getText().toString());
-                params.put("password", password.getText().toString());
+                params.put("login", userName);
+                params.put("password", password);
                 return params;
             }
         };

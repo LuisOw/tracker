@@ -14,13 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.tracker3.util.ClickListener;
 import com.example.tracker3.util.HttpRequest;
-import com.example.tracker3.util.VolleyCallback;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,8 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class ResearchActivity extends AppCompatActivity implements ClickListener {
@@ -79,21 +72,7 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
         }
     }
 
-    private void retrieveData(String jwtToken, UUID userId, UUID researchId, VolleyCallback callback) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, HttpRequest.BASE_URL
-                + String.format("/%s/research/%s", userId, researchId),
-                callback::onSuccess,
-                error -> Toast.makeText(this, "Unable to retrieve data", Toast.LENGTH_SHORT)
-                        .show()) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("jwtToken", jwtToken);
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+    private void retrieveData(String jwtToken, UUID userId, UUID researchId) {
     }
 
 

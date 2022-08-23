@@ -1,48 +1,46 @@
 package com.example.tracker3;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.tracker3.util.HttpRequest;
-import com.example.tracker3.util.VolleyCallback;
+import com.example.tracker3.util.SharedPreferencesUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CreateAccount extends AppCompatActivity {
 
-    private TextView textView;
+    private static final String TAG = "CreateAccount";
+
     private String jwtToken;
     private EditText userName;
     private EditText password;
+    private SharedPreferences localSharesPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        localSharesPreferences = getPreferences(Context.MODE_PRIVATE);
         setContentView(R.layout.account_creation);
         userName = findViewById(R.id.et_username);
         password = findViewById(R.id.et_password);
-        textView = findViewById(R.id.message);
     }
 
     public void create(View view) {
-        this.createAccount(result -> {
-            jwtToken = result;
-            Toast.makeText(this, "Conta criada" + jwtToken, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(CreateAccount.this, MainActivity.class);
-            startActivity(intent);
-        });
+        this.createAccount();
+        this.renderResearch();
     }
 
     public void cancel(View view) {
@@ -50,19 +48,23 @@ public class CreateAccount extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void createAccount(VolleyCallback callback){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, HttpRequest.BASE_URL + "/create",
-                callback::onSuccess,
-                error -> textView.setText("Unable to create account")) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("login", userName.getText().toString());
-                params.put("password", password.getText().toString());
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+    public void createAccount(){
+        Map<String, String> params = new HashMap<>();
+        params.put("login", userName.getText().toString());
+        params.put("password", password.getText().toString());
+
+ /*       jwtToken = result.getString("token");
+        Toast.makeText(CreateAccount.this, "Erro parseando json",
+                Toast.LENGTH_LONG).show();
+        localSharesPreferences.edit()
+                .putString(SharedPreferencesUtils.TOKEN_KEY, jwtToken).commit();
+        renderResearch();*/
+
+    }
+
+    private void renderResearch() {
+        /*Intent intent = new Intent(CreateAccount.this, ResearchActivity.class);
+        intent.putExtra("json", result);
+        startActivity(intent);*/
     }
 }

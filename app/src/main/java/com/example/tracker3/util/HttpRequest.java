@@ -1,15 +1,7 @@
 package com.example.tracker3.util;
 
-import android.content.Context;
-
-import org.json.JSONObject;
-
-import java.util.Map;
 
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -17,7 +9,7 @@ public class HttpRequest {
 
     private static final String TAG = "HttpRequest";
     public static final String BASE_URL ="https://tcc-cco-tracker.herokuapp.com";
-    public static final String RESEARCH_ENDPOINT = BASE_URL + "/pesquisas";
+    public static final String RESEARCH_ENDPOINT = BASE_URL + "/participantes/pesquisas";
     public static final String LOGIN_ENDPOINT = BASE_URL + "/token";
     public static final String CREATE_ENDPOINT = "/create";
 

@@ -15,14 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tracker3.util.ClickListener;
-import com.example.tracker3.util.HttpRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 public class ResearchActivity extends AppCompatActivity implements ClickListener {
@@ -35,19 +36,21 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObjectMapper mapper = new ObjectMapper();
+        Gson gson = new Gson();
         Intent intent = getIntent();
-        /*try {
-            user = mapper.readValue(intent.getStringExtra("json"), User.class);
-        } catch (JsonProcessingException e) {
-            Toast.makeText(getApplicationContext(), "Unable to retrieve research with id",
-                    Toast.LENGTH_SHORT).show();
+        String test = intent.getStringExtra("json");
+        Type type = new TypeToken<Collection<Research>>(){}.getType();
+        Collection<Research> researchesCollection = gson.fromJson(test, type);
+        this.researches = new ArrayList<>(researchesCollection);
+
+        /* used only for debug purpose
+        for (Research r : researches) {
+            Log.e(TAG, r.toString());
         }*/
 
         setContentView(R.layout.active_researches);
         RecyclerView rvResearches = findViewById(R.id.rv_research);
-        researches = Research.createResearchesList(20);
-        ResearchAdapter adapter = new ResearchAdapter(researches, this);
+        ResearchAdapter adapter = new ResearchAdapter(this.researches, this);
         rvResearches.setAdapter(adapter);
         rvResearches.setLayoutManager(new LinearLayoutManager(this));
 
@@ -56,7 +59,7 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
 
     }
 
-    void getData(UUID researchId) {
+    void getData(int researchId) {
         try {
             JSONObject retrievedData = new JSONObject(generateJson());
             /*this.retrieveData(user.jwtToken, researchId, callback);*/

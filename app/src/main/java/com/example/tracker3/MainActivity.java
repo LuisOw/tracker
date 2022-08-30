@@ -29,12 +29,8 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
@@ -48,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String jwtToken;
     private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
+    private ObjectMapper objectMapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button newAccountButton = findViewById(R.id.btn_new_account);
             newAccountButton.setOnClickListener(this);
             client = new OkHttpClient();
+            objectMapper = new ObjectMapper();
         } else {
             this.renderResearch();
         }
@@ -82,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void renderResearch() {
-        Log.e(TAG, "render");
         Request request = HttpRequest.getRequestBuilder(HttpRequest.RESEARCH_ENDPOINT, jwtToken);
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -96,28 +93,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
-                    Log.e(TAG, "code 200");
-                    Map<String, Object> responseMap = new ObjectMapper().readValue
-                            (Objects.requireNonNull(response.body()).byteStream(), HashMap.class);
-                    Log.e(TAG, "start for");
-                    for (Map.Entry<String, Object> entry : responseMap.entrySet()) {
-                        String key = entry.getKey();
-                        Object value = entry.getValue();
-                        Log.e(TAG, "key:" + key + " value:" + value);
-                    }
-                    Log.e(TAG, "end for");
+                    Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
+                    intent.putExtra("json", Objects.requireNonNull(response.body()).string());
+                    startActivity(intent);
                 } else {
                     Log.e(TAG, "actual code: " + response.code());
                 }
             }
         });
- /*       Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
-        intent.putExtra("json", result);
-        startActivity(intent);*/
     }
 
     public void verifyAccountInformation(String userName, String password) {
-        Request request = HttpRequest.localAuthBuilder("test@gmail.com", "123");
+        Request request = HttpRequest.localAuthBuilder("099", "123");
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -131,11 +118,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
                     //TODO add user parse logic. Keeping for debug purpose
-                    Map<String, Object> responseMap = new ObjectMapper().readValue
+                    Map<String, Object> responseMap = objectMapper.readValue
                             (Objects.requireNonNull(response.body()).byteStream(), HashMap.class);
                     String accessToken = (String) responseMap.get("access_token");
                     Log.e(TAG, accessToken);
                     jwtToken = accessToken;
+                    Log.e(TAG, "Research should be render next");
                     renderResearch();
                 } else {
                     Log.e(TAG, "not 200 code");

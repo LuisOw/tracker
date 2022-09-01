@@ -39,18 +39,5 @@ public class Research {
                 ", state='" + state + '\'' +
                 '}';
     }
-
-
-    /*
-    //TODO remove dummy function. Create a proper list generator.
-    public static ArrayList<Research> createResearchesList(int numContacts) {
-        ArrayList<Research> contacts = new ArrayList<>();
-
-        for (int i = 1; i <= numContacts; i++) {
-            contacts.add(new Research(UUID.randomUUID(), "Pesquisa " + i));
-        }
-
-        return contacts;
-    }*/
 }
 

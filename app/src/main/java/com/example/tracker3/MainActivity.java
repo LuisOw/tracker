@@ -19,12 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -44,11 +44,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String jwtToken;
     private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
-    private ObjectMapper objectMapper;
+    private Gson gson;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = new OkHttpClient();
+        gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
         localSharesPreferences = getPreferences(Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
         if (jwtToken.isEmpty()) {
@@ -62,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             forgotButton.setOnClickListener(this);
             Button newAccountButton = findViewById(R.id.btn_new_account);
             newAccountButton.setOnClickListener(this);
-            client = new OkHttpClient();
-            objectMapper = new ObjectMapper();
         } else {
-            this.renderResearch();
+            //TODO this path should be conditional on token validity period.
+            Log.e(TAG, "Shared found. Skipping login using token = " + jwtToken);
+            this.renderResearch(jwtToken);
         }
 
     /*    if (!checkUsageStatsPermission()) {
@@ -79,15 +83,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.verifyAccountInformation(localUsername, localPassword);
     }
 
-    private void renderResearch() {
-        Request request = HttpRequest.getRequestBuilder(HttpRequest.RESEARCH_ENDPOINT, jwtToken);
+    private void renderResearch(String token) {
+        Request request = HttpRequest.getRequestBuilder(HttpRequest.RESEARCH_ENDPOINT, token);
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this,
-                                "Erro pegando pesquisas.", Toast.LENGTH_LONG)
-                        .show());
+                                "Erro pegando pesquisas.", Toast.LENGTH_LONG).show());
             }
 
             @Override
@@ -117,14 +120,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
-                    //TODO add user parse logic. Keeping for debug purpose
-                    Map<String, Object> responseMap = objectMapper.readValue
-                            (Objects.requireNonNull(response.body()).byteStream(), HashMap.class);
-                    String accessToken = (String) responseMap.get("access_token");
-                    Log.e(TAG, accessToken);
-                    jwtToken = accessToken;
-                    Log.e(TAG, "Research should be render next");
-                    renderResearch();
+                    Log.e(TAG, "200 code");
+                    user = gson.fromJson(Objects.requireNonNull(response.body()).string(),
+                            User.class);
+                    Log.e(TAG, user.toString());
+                    SharedPreferences.Editor editor = localSharesPreferences.edit();
+                    editor.putString(SharedPreferencesUtils.TOKEN_KEY, user.getAccessToken());
+                    editor.apply();
+                    renderResearch(user.getAccessToken());
                 } else {
                     Log.e(TAG, "not 200 code");
                 }

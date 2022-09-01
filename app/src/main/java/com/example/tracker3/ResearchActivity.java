@@ -36,17 +36,13 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Gson gson = new Gson();
         Intent intent = getIntent();
         String test = intent.getStringExtra("json");
         Type type = new TypeToken<Collection<Research>>(){}.getType();
         Collection<Research> researchesCollection = gson.fromJson(test, type);
         this.researches = new ArrayList<>(researchesCollection);
-
-        /* used only for debug purpose
-        for (Research r : researches) {
-            Log.e(TAG, r.toString());
-        }*/
 
         setContentView(R.layout.active_researches);
         RecyclerView rvResearches = findViewById(R.id.rv_research);
@@ -56,7 +52,6 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
     }
 
     void getData(int researchId) {

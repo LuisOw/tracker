@@ -10,7 +10,7 @@ public class HttpRequest {
     private static final String TAG = "HttpRequest";
     public static final String BASE_URL ="https://tcc-cco-tracker.herokuapp.com";
     public static final String RESEARCH_ENDPOINT = BASE_URL + "/participantes/pesquisas";
-    public static final String LOGIN_ENDPOINT = BASE_URL + "/token";
+    public static final String LOGIN_ENDPOINT = BASE_URL + "/participante/token";
     public static final String CREATE_ENDPOINT = "/create";
 
 

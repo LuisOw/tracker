@@ -1,52 +1,58 @@
 package com.example.tracker3;
 
-import java.util.Map;
-import java.util.UUID;
-
 public class User {
-    private UUID id;
-    private String name;
-    private String cpf;
-    private String jwtToken;
-    private Map<UUID, String> researchesIds;
+    private String chosenName;
+    private String username;
+    private String accessToken;
+    private String tokenType;
 
-    public UUID getId() {
-        return id;
+
+    public User(String chosenName, String username, String accessToken, String tokenType) {
+        this.chosenName = chosenName;
+        this.username = username;
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public String getChosenName() {
+        return chosenName;
     }
 
-    public String getName() {
-        return name;
+    public void setChosenName(String chosenName) {
+        this.chosenName = chosenName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getUsername() {
+        return username;
     }
 
-    public String getCpf() {
-        return cpf;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public String getJwtToken() {
-        return jwtToken;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
+    public String getTokenType() {
+        return tokenType;
     }
 
-    public Map<UUID, String> getResearchesIds() {
-        return researchesIds;
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
-    public void setResearchesIds(Map<UUID, String> researchesIds) {
-        this.researchesIds = researchesIds;
+    @Override
+    public String toString() {
+        return "User{" +
+                "chosenName='" + chosenName + '\'' +
+                ", username='" + username + '\'' +
+                ", accessToken='" + accessToken + '\'' +
+                ", tokenType='" + tokenType + '\'' +
+                '}';
     }
 }

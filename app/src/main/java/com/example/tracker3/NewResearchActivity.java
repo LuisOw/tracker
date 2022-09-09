@@ -10,11 +10,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,15 +27,10 @@ import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,14 +38,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ResearchActivity extends AppCompatActivity implements ClickListener {
-
-    private static final String TAG = "ResearchActivity";
+public class NewResearchActivity extends AppCompatActivity implements ClickListener {
+    private static final String TAG = "NewResearchActivity";
     ArrayList<Research> researches;
     private User user;
-    private String jwtToken;
-    private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
+    private String jwtToken;
 
 
     @Override
@@ -56,81 +52,58 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
 
         Gson gson = new Gson();
         Intent intent = getIntent();
-        String researchesAsJson = intent.getStringExtra("researches");
+        String researchesAsJson = intent.getStringExtra("newResearches");
         Type type = new TypeToken<Collection<Research>>(){}.getType();
         Collection<Research> researchesCollection = gson.fromJson(researchesAsJson, type);
         this.researches = new ArrayList<>(researchesCollection);
 
         setContentView(R.layout.active_researches);
+        ConstraintLayout layout = findViewById(R.id.constraint_layout);
+        Button loginButton = findViewById(R.id.search_new_research);
+        loginButton.setVisibility(View.INVISIBLE);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(layout);
+        constraintSet.connect(R.id.rv_research, ConstraintSet.TOP, R.id.toolbar, ConstraintSet.BOTTOM);
+        constraintSet.applyTo(layout);
         RecyclerView rvResearches = findViewById(R.id.rv_research);
-        ResearchAdapter adapter = new ResearchAdapter(this.researches, this);
+        NewResearchAdapter adapter = new NewResearchAdapter(this.researches, this);
         rvResearches.setAdapter(adapter);
         rvResearches.setLayoutManager(new LinearLayoutManager(this));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
-        this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
     }
 
-    void getData(int researchId) {
-        try {
-            JSONObject retrievedData = new JSONObject(generateJson());
-            /*this.retrieveData(user.jwtToken, researchId, callback);*/
-            Intent intent = new Intent(ResearchActivity.this, PresentedResearch.class);
-            intent.putExtra("json", retrievedData.toString());
-            Toast.makeText(getApplicationContext(), "Http request with id = " + researchId,
-                    Toast.LENGTH_SHORT).show();
-            startActivity(intent);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Deu ruim fi" +
-                    researchId, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onPositionClick(int position, View v) {
+        //TODO the logic behind retrieve data.
+        Research researchOnPosition = researches.get(position);
+        Log.e(TAG, "Id to be retrieved: " + researchOnPosition.getId());
+        switch (v.getId()) {
+            case R.id.rv_item_description_research_button:
+                this.showDescription(researchOnPosition.getDescription());
+                break;
+            case R.id.rv_item_new_research_button:
+                this.addResearch(researchOnPosition.getId());
+                break;
         }
     }
 
-    private void retrieveData(String jwtToken, UUID userId, UUID researchId) {
-    }
-
-
-    private String generateJson() {
-        return "{" +
-                "\"usageTimeCapture\": \"true\"," +
-                "\"researches\": [\n" +
-                "      {\n" +
-                "        \"type\": \"multiple_choice\",\n" +
-                "        \"question\": \"primeira pergunta\",\n" +
-                "        \"answers\": [\n" +
-                "          \"string1\",\n" +
-                "          \"string2\",\n" +
-                "          \"string3\"\n" +
-                "        ]\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"type\": \"other\",\n" +
-                "        \"question\": \"pergunta 14\"\n" +
-                "      }" +
-                "    ]\n" +
-                "  }" +
-                "}";
-    }
-
-    public void newResearch(View view) {
-        Log.e(TAG, "newResearch");
-        Request request = HttpRequest.getRequestBuilder(HttpRequest.NEW_RESEARCH_ENDPOINT, this.jwtToken);
+    private void addResearch(int id) {
+        String url = HttpRequest.RESEARCH_ENDPOINT + "/" + id;
+        Request request = HttpRequest.getRequestBuilder(url, this.jwtToken);
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                ResearchActivity.this.runOnUiThread(() -> Toast.makeText(ResearchActivity.this,
+                NewResearchActivity.this.runOnUiThread(() -> Toast.makeText(NewResearchActivity.this,
                         "Erro pegando pesquisas.", Toast.LENGTH_LONG).show());
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.code() == 200) {
-                    Intent intent = new Intent(ResearchActivity.this, NewResearchActivity.class);
-                    intent.putExtra("newResearches", Objects.requireNonNull(response.body()).string());
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.code() == 204) {
+                    Intent intent = new Intent(NewResearchActivity.this, ResearchActivity.class);
                     startActivity(intent);
                 } else {
                     Log.e(TAG, "actual code: " + response.code());
@@ -139,12 +112,7 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
         });
     }
 
-    @Override
-    public void onPositionClick(int position, View v) {
-        //TODO the logic behind retrieve data.
-        int id = researches.get(position).getId();
-        getData(id);
-        Log.e(TAG, "Id to be retrieved: " + id);
+    private void showDescription(String researchOnPosition) {
     }
 
     @Override

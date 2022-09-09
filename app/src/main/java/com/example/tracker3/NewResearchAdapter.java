@@ -15,34 +15,37 @@ import java.util.List;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
-public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHolder> {
+public class NewResearchAdapter extends RecyclerView.Adapter<NewResearchAdapter.ViewHolder> {
 
     private final List<Research> mResearches;
     private ClickListener mListener;
     // Pass in the contact array into the constructor
-    public ResearchAdapter(List<Research> researches, ClickListener listener) {
+    public NewResearchAdapter(List<Research> researches, ClickListener listener) {
         mResearches = researches;
         this.mListener = listener;
     }
 
     @NonNull
     @Override
-    public ResearchAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewResearchAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_research_item, parent, false), mListener);
+                .inflate(R.layout.rv_new_research_item, parent, false), mListener);
     }
 
     @Override
-    public void onBindViewHolder(ResearchAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(NewResearchAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
         Research research = mResearches.get(position);
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
         textView.setText(research.getTitle());
-        Button button = holder.researchButton;
-        button.setText("Abrir");
-        button.setEnabled(true);
+        Button addResearchButton = holder.researchButton;
+        addResearchButton.setText("Participar");
+        addResearchButton.setEnabled(true);
+        Button descriptionButton = holder.descriptionButton;
+        descriptionButton.setText("Descrição");
+        descriptionButton.setEnabled(true);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         // for any view that will be set as you render a row
         public TextView nameTextView;
         public Button researchButton;
+        public Button descriptionButton;
         ClickListener listener;
 
         // We also create a constructor that accepts the entire item row
@@ -67,11 +71,13 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             super(itemView);
 
             nameTextView = itemView.findViewById(R.id.rv_item_research_name);
-            researchButton = itemView.findViewById(R.id.rv_item_research_button);
+            researchButton = itemView.findViewById(R.id.rv_item_new_research_button);
+            descriptionButton = itemView.findViewById(R.id.rv_item_description_research_button);
             this.listener = listener;
 
             itemView.setOnClickListener(this);
             researchButton.setOnClickListener(this);
+            descriptionButton.setOnClickListener(this);
         }
 
         @Override

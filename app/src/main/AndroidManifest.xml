@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name="ResearchActivity"/>
+        <activity android:name=".NewResearchActivity"/>
         <activity android:name=".CreateAccount"/>
         <activity android:name=".PresentedResearch"/>
         <meta-data

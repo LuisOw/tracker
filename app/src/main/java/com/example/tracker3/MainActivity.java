@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         client = new OkHttpClient();
         gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
-        localSharesPreferences = getPreferences(Context.MODE_PRIVATE);
+        localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
         if (jwtToken.isEmpty()) {
             setContentView(R.layout.login);
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
                     Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
-                    intent.putExtra("json", Objects.requireNonNull(response.body()).string());
+                    intent.putExtra("researches", Objects.requireNonNull(response.body()).string());
                     startActivity(intent);
                 } else {
                     Log.e(TAG, "actual code: " + response.code());

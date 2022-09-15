@@ -1,19 +1,14 @@
 package com.example.tracker3;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +35,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ResearchActivity extends AppCompatActivity implements ClickListener {
+public class ResearchActivity extends BaseActivity implements ClickListener {
 
     private static final String TAG = "ResearchActivity";
     ArrayList<Research> researches;
@@ -48,7 +43,6 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
     private String jwtToken;
     private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +65,7 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
         setSupportActionBar(toolbar);
         localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
+        client = new OkHttpClient();
     }
 
     void getData(int researchId) {
@@ -147,35 +142,4 @@ public class ResearchActivity extends AppCompatActivity implements ClickListener
         Log.e(TAG, "Id to be retrieved: " + id);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.config:
-                Toast.makeText(this, "Config selecionado", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.logout:
-                Toast.makeText(this, "Logout selecionado", Toast.LENGTH_SHORT).show();
-                SharedPreferences localSharesPreferences = getSharedPreferences("account", Context.MODE_PRIVATE);
-                String token = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
-                Log.e(TAG, "token = " + token);
-                SharedPreferences.Editor editor = localSharesPreferences.edit();
-                editor.clear().commit();
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.info:
-                Toast.makeText(this, "Info selecionado", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

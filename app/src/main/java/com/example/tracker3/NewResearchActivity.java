@@ -1,20 +1,15 @@
 package com.example.tracker3;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -31,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,12 +34,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class NewResearchActivity extends AppCompatActivity implements ClickListener {
+public class NewResearchActivity extends BaseActivity implements ClickListener {
     private static final String TAG = "NewResearchActivity";
     ArrayList<Research> researches;
     private User user;
     private OkHttpClient client;
     private String jwtToken;
+    private SharedPreferences localSharesPreferences;
 
 
     @Override
@@ -70,8 +67,12 @@ public class NewResearchActivity extends AppCompatActivity implements ClickListe
         rvResearches.setAdapter(adapter);
         rvResearches.setLayoutManager(new LinearLayoutManager(this));
 
+        localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
+        this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        client = new OkHttpClient();
     }
 
     @Override
@@ -90,8 +91,9 @@ public class NewResearchActivity extends AppCompatActivity implements ClickListe
     }
 
     private void addResearch(int id) {
+        Log.e(TAG, "addResearch");
         String url = HttpRequest.RESEARCH_ENDPOINT + "/" + id;
-        Request request = HttpRequest.getRequestBuilder(url, this.jwtToken);
+        Request request = HttpRequest.patchRequestBuilder(url, this.jwtToken, "");
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -103,7 +105,29 @@ public class NewResearchActivity extends AppCompatActivity implements ClickListe
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (response.code() == 204) {
+                  renderResearch();
+                } else {
+                    Log.e(TAG, "actual code: " + response.code());
+                }
+            }
+        });
+    }
+
+    private void renderResearch() {
+        Request request = HttpRequest.getRequestBuilder(HttpRequest.RESEARCH_ENDPOINT, this.jwtToken);
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                NewResearchActivity.this.runOnUiThread(() -> Toast.makeText(NewResearchActivity.this,
+                        "Erro pegando pesquisas.", Toast.LENGTH_LONG).show());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.code() == 200) {
                     Intent intent = new Intent(NewResearchActivity.this, ResearchActivity.class);
+                    intent.putExtra("researches", Objects.requireNonNull(response.body()).string());
                     startActivity(intent);
                 } else {
                     Log.e(TAG, "actual code: " + response.code());
@@ -113,37 +137,5 @@ public class NewResearchActivity extends AppCompatActivity implements ClickListe
     }
 
     private void showDescription(String researchOnPosition) {
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.config:
-                Toast.makeText(this, "Config selecionado", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.logout:
-                Toast.makeText(this, "Logout selecionado", Toast.LENGTH_SHORT).show();
-                SharedPreferences localSharesPreferences = getSharedPreferences("account", Context.MODE_PRIVATE);
-                String token = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
-                Log.e(TAG, "token = " + token);
-                SharedPreferences.Editor editor = localSharesPreferences.edit();
-                editor.clear().commit();
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.info:
-                Toast.makeText(this, "Info selecionado", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

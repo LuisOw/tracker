@@ -88,23 +88,6 @@
             android:minHeight="48dp"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <TextView
-            android:id="@+id/tv_gender_identity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="33dp"
-            android:fontFamily="monospace"
-            android:text="@string/gender_identity"
-            android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/spinner_identity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -114,7 +97,6 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" >
             </Space>
-
             <Button
                 android:id="@+id/btn_cancelar"
                 android:layout_width="wrap_content"

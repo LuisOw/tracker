@@ -49,9 +49,13 @@
     <string name="recusar">Recusar</string>
     <string name="aceitar">Aceitar</string>
     <string name="cpf">CPF</string>
+    <string name="income">Informe seu salário</string>
+    <string name="age">Clique para informar sua data de nascimento</string>
     <string name="password">Senha</string>
     <string name="login">Acessar</string>
     <string name="cpf_hint">xxx.xxx.xxx-xx</string>
+    <string name="income_hint">Salário</string>
+    <string name="age_hint">Idade</string>
     <string name="pass_forgot">Esqueci minha senha</string>
     <string name="participant_name">Qual nome você prefere usar?</string>
     <string name="gender_identity">Identidade de gênero, como você se identifica?</string>
@@ -63,6 +67,24 @@
         <item>Homem trans</item>
         <item>Não binária</item>
         <item>Outro</item>
+    </string-array>
+    <string name="race">Raça, como você se identifica?</string>
+    <string-array name="race_options">
+        <item>Prefiro não responder</item>
+        <item>Branca</item>
+        <item>Preta</item>
+        <item>Parda</item>
+        <item>Amarela</item>
+        <item>Indígena</item>
+        <item>Outra</item>
+    </string-array>
+    <string name="sexuality">Sexualidade, como você se identifica?</string>
+    <string-array name="sexuality_options">
+        <item>Prefiro não responder</item>
+        <item>Heterossexual</item>
+        <item>Homossexual</item>
+        <item>Bissexual</item>
+        <item>Outra</item>
     </string-array>
     <string name="states_text">Em qual estado você mora?</string>
     <string-array name="states_options">
@@ -100,6 +122,7 @@
     <string name="logout">Log out</string>
     <string name="infos">Informações</string>
     <string name="create">Criar conta</string>
+    <string name="filter">Atualizar filtros</string>
     <string name="cancel">Cancelar</string>
     <string name="com_auth0_client_id">dfmZCOmBbG0eb7Wp2kuMCmXeVdq2fX0O</string>
     <string name="com_auth0_domain">dev-tepbuwil.us.auth0.com</string>

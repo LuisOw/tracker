@@ -68,46 +68,32 @@ public class ResearchActivity extends BaseActivity implements ClickListener {
         client = new OkHttpClient();
     }
 
-    void getData(int researchId) {
-        try {
-            JSONObject retrievedData = new JSONObject(generateJson());
-            /*this.retrieveData(user.jwtToken, researchId, callback);*/
-            Intent intent = new Intent(ResearchActivity.this, PresentedResearch.class);
-            intent.putExtra("json", retrievedData.toString());
-            Toast.makeText(getApplicationContext(), "Http request with id = " + researchId,
-                    Toast.LENGTH_SHORT).show();
-            startActivity(intent);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Deu ruim fi" +
-                    researchId, Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    private void retrieveData(String jwtToken, UUID userId, UUID researchId) {
-    }
+    private void retrieveData(int researchId) {
+        Log.e(TAG, "get questionnaires");
+        Request request = HttpRequest.getRequestBuilder(
+                String.format(HttpRequest.SUBJECT_QUESTIONNAIRES, researchId), this.jwtToken
+        );
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                ResearchActivity.this.runOnUiThread(() -> Toast.makeText(ResearchActivity.this,
+                        "Erro pegando questionarios.", Toast.LENGTH_LONG).show());
+            }
 
-
-    private String generateJson() {
-        return "{" +
-                "\"usageTimeCapture\": \"true\"," +
-                "\"researches\": [\n" +
-                "      {\n" +
-                "        \"type\": \"multiple_choice\",\n" +
-                "        \"question\": \"primeira pergunta\",\n" +
-                "        \"answers\": [\n" +
-                "          \"string1\",\n" +
-                "          \"string2\",\n" +
-                "          \"string3\"\n" +
-                "        ]\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"type\": \"other\",\n" +
-                "        \"question\": \"pergunta 14\"\n" +
-                "      }" +
-                "    ]\n" +
-                "  }" +
-                "}";
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.code() == 200) {
+                    Intent intent = new Intent(ResearchActivity.this, QuestionnaireActivity.class);
+                    intent.putExtra("questionnaires", Objects.requireNonNull(response.body()).string());
+                    intent.putExtra("researchId", researchId);
+                    startActivity(intent);
+                } else {
+                    Log.e(TAG, "actual code: " + response.code());
+                }
+            }
+        });
     }
 
     public void newResearch(View view) {
@@ -138,7 +124,7 @@ public class ResearchActivity extends BaseActivity implements ClickListener {
     public void onPositionClick(int position, View v) {
         //TODO the logic behind retrieve data.
         int id = researches.get(position).getId();
-        getData(id);
+        this.retrieveData(id);
         Log.e(TAG, "Id to be retrieved: " + id);
     }
 

@@ -77,7 +77,6 @@ public class NewResearchActivity extends BaseActivity implements ClickListener {
 
     @Override
     public void onPositionClick(int position, View v) {
-        //TODO the logic behind retrieve data.
         Research researchOnPosition = researches.get(position);
         Log.e(TAG, "Id to be retrieved: " + researchOnPosition.getId());
         switch (v.getId()) {

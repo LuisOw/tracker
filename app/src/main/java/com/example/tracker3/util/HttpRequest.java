@@ -9,12 +9,13 @@ import okhttp3.RequestBody;
 public class HttpRequest {
 
     private static final String TAG = "HttpRequest";
+    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json");
     public static final String BASE_URL = "https://tcc-cco-tracker.herokuapp.com";
     public static final String SUBJECT = BASE_URL + "/participantes";
     public static final String RESEARCH_ENDPOINT = SUBJECT + "/pesquisas";
     public static final String NEW_RESEARCH_ENDPOINT = SUBJECT + "/pesquisas-filtradas";
     public static final String LOGIN_ENDPOINT = BASE_URL + "/participante/token";
-    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json");
+    public static final String SUBJECT_QUESTIONNAIRES = SUBJECT + "/pesquisas/%s/questionarios";
 
 
     public static Request getRequestBuilder(String endpoint, String token) {

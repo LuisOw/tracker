@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.tracker3.domain.User;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.FieldNamingPolicy;
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void accountCreate() {
-        Intent intent = new Intent(this, CreateAccount.class);
+        Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
     }
 

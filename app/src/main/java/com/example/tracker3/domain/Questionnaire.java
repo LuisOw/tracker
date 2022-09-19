@@ -1,4 +1,4 @@
-package com.example.tracker3;
+package com.example.tracker3.domain;
 
 
 public class Questionnaire {

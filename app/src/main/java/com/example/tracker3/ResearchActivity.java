@@ -13,21 +13,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tracker3.adapter.ResearchAdapter;
+import com.example.tracker3.domain.Research;
+import com.example.tracker3.domain.User;
 import com.example.tracker3.util.ClickListener;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;

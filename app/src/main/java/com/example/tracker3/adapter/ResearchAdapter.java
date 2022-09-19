@@ -1,4 +1,4 @@
-package com.example.tracker3;
+package com.example.tracker3.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tracker3.R;
+import com.example.tracker3.domain.Research;
 import com.example.tracker3.util.ClickListener;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.tracker3;
+package com.example.tracker3.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,44 +9,51 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tracker3.R;
+import com.example.tracker3.domain.Research;
 import com.example.tracker3.util.ClickListener;
 
 import java.util.List;
 
-public class QuestionnaireAdapter extends RecyclerView.Adapter<QuestionnaireAdapter.ViewHolder> {
+// Create the basic adapter extending from RecyclerView.Adapter
+// Note that we specify the custom ViewHolder which gives us access to our views
+public class NewResearchAdapter extends RecyclerView.Adapter<NewResearchAdapter.ViewHolder> {
 
-    private final List<Questionnaire> mQuestionnaires;
+    private final List<Research> mResearches;
     private ClickListener mListener;
     // Pass in the contact array into the constructor
-    public QuestionnaireAdapter(List<Questionnaire> questionnaires, ClickListener listener) {
-        mQuestionnaires = questionnaires;
+    public NewResearchAdapter(List<Research> researches, ClickListener listener) {
+        mResearches = researches;
         this.mListener = listener;
     }
 
     @NonNull
     @Override
-    public QuestionnaireAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewResearchAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.rv_research_item, parent, false), mListener);
+                .inflate(R.layout.rv_new_research_item, parent, false), mListener);
     }
 
     @Override
-    public void onBindViewHolder(QuestionnaireAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(NewResearchAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
-        Questionnaire questionnaire = mQuestionnaires.get(position);
+        Research research = mResearches.get(position);
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
-        textView.setText(questionnaire.getTitle());
-        Button button = holder.questionnaireButton;
-        button.setText("Responder");
-        button.setEnabled(true);
+        textView.setText(research.getTitle());
+        Button addResearchButton = holder.researchButton;
+        addResearchButton.setText("Participar");
+        addResearchButton.setEnabled(true);
+        Button descriptionButton = holder.descriptionButton;
+        descriptionButton.setText("Descrição");
+        descriptionButton.setEnabled(true);
     }
 
     @Override
     public int getItemCount() {
-            return mQuestionnaires.size();
-            }
+        return mResearches.size();
+    }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -54,7 +61,8 @@ public class QuestionnaireAdapter extends RecyclerView.Adapter<QuestionnaireAdap
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-        public Button questionnaireButton;
+        public Button researchButton;
+        public Button descriptionButton;
         ClickListener listener;
 
         // We also create a constructor that accepts the entire item row
@@ -65,11 +73,13 @@ public class QuestionnaireAdapter extends RecyclerView.Adapter<QuestionnaireAdap
             super(itemView);
 
             nameTextView = itemView.findViewById(R.id.rv_item_research_name);
-            questionnaireButton = itemView.findViewById(R.id.rv_item_research_button);
+            researchButton = itemView.findViewById(R.id.rv_item_new_research_button);
+            descriptionButton = itemView.findViewById(R.id.rv_item_description_research_button);
             this.listener = listener;
 
             itemView.setOnClickListener(this);
-            questionnaireButton.setOnClickListener(this);
+            researchButton.setOnClickListener(this);
+            descriptionButton.setOnClickListener(this);
         }
 
         @Override

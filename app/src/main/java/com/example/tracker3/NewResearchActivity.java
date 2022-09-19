@@ -16,6 +16,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tracker3.adapter.NewResearchAdapter;
+import com.example.tracker3.domain.Research;
+import com.example.tracker3.domain.User;
 import com.example.tracker3.util.ClickListener;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;

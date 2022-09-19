@@ -29,7 +29,7 @@ public class PresentedResearch extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.empty);
+        setContentView(R.layout.base_fragment);
 
         Intent intent = getIntent();
 

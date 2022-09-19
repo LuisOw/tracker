@@ -1,4 +1,4 @@
-package com.example.tracker3;
+package com.example.tracker3.util;
 
 import android.util.Log;
 

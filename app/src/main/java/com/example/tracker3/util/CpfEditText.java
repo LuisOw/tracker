@@ -1,4 +1,4 @@
-package com.example.tracker3;
+package com.example.tracker3.util;
 
 import android.content.Context;
 import android.text.Editable;

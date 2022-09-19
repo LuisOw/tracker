@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.tracker3.domain.User;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.FieldNamingPolicy;
@@ -28,7 +29,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CreateAccount extends AppCompatActivity {
+public class CreateAccountActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateAccount";
 
@@ -70,7 +71,7 @@ public class CreateAccount extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                CreateAccount.this.runOnUiThread(() -> Toast.makeText(CreateAccount.this,
+                CreateAccountActivity.this.runOnUiThread(() -> Toast.makeText(CreateAccountActivity.this,
                                 "Erro validando usuário.", Toast.LENGTH_LONG)
                         .show());
             }
@@ -99,14 +100,14 @@ public class CreateAccount extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                CreateAccount.this.runOnUiThread(() -> Toast.makeText(CreateAccount.this,
+                CreateAccountActivity.this.runOnUiThread(() -> Toast.makeText(CreateAccountActivity.this,
                         "Erro pegando pesquisas.", Toast.LENGTH_LONG).show());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
-                    Intent intent = new Intent(CreateAccount.this, ResearchActivity.class);
+                    Intent intent = new Intent(CreateAccountActivity.this, ResearchActivity.class);
                     intent.putExtra("json", Objects.requireNonNull(response.body()).string());
                     startActivity(intent);
                 } else {

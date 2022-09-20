@@ -66,7 +66,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     public void createAccount(String username, String password){
-        Request request = HttpRequest.localAuthBuilder(username, password);
+        Request request = HttpRequest.localAuthBuilder(username, password, HttpRequest.NEW_ACCOUNT_ENDPOINT);
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override

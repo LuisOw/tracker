@@ -46,14 +46,15 @@ public class QuestionnaireActivity extends BaseActivity implements ClickListener
     private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
     private int researchId;
+    private Intent defaultIntent;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Gson gson = new Gson();
-        Intent intent = getIntent();
-        this.researchId = intent.getIntExtra("researchId", 0);
-        String questionnairesAsJson = intent.getStringExtra("questionnaires");
+        defaultIntent = getIntent();
+        this.researchId = defaultIntent.getIntExtra("researchId", 0);
+        String questionnairesAsJson = defaultIntent.getStringExtra("questionnaires");
         Type type = new TypeToken<Collection<Questionnaire>>(){}.getType();
         Collection<Questionnaire> questionnaireCollection = gson.fromJson(questionnairesAsJson, type);
         this.questionnaires = new ArrayList<>(questionnaireCollection);
@@ -102,7 +103,9 @@ public class QuestionnaireActivity extends BaseActivity implements ClickListener
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
                     Intent intent = new Intent(QuestionnaireActivity.this, QuestionActivity.class);
+                    intent.putExtras(defaultIntent);
                     intent.putExtra("questions", Objects.requireNonNull(response.body()).string());
+                    intent.putExtra("questionnaireId", questionnaireId);
                     startActivity(intent);
                 } else {
                     Log.e(TAG, "actual code: " + response.code());

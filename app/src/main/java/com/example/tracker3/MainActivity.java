@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    public void verifyAccountInformation(String userName, String password) {
-        Request request = HttpRequest.localAuthBuilder("099", "123");
+    public void verifyAccountInformation(String username, String password) {
+        Request request = HttpRequest.localAuthBuilder(username, password, HttpRequest.LOGIN_ENDPOINT);
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override

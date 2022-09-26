@@ -57,7 +57,7 @@ public class QuestionActivity extends BaseActivity implements QuestionFragment.O
         super.onCreate(savedInstanceState);
         Log.e(TAG, "onCreate question");
 
-        client = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor()).build();
+        client = new OkHttpClient();
         Gson gson = new Gson();
         srcIntent = getIntent();
         String questionsAsJson = srcIntent.getStringExtra("questions");

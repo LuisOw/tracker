@@ -18,6 +18,7 @@ public class HttpRequest {
     public static final String LOGIN_ENDPOINT = BASE_URL + "/participante/token";
     public static final String SUBJECT_QUESTIONNAIRES = SUBJECT + "/pesquisas/%s/questionarios";
     public static final String SUBJECT_QUESTION = SUBJECT_QUESTIONNAIRES + "/%s/questoes";
+    public static final String SUBJECT_USAGE_TIME = SUBJECT + "/uso";
 
 
     public static Request getRequestBuilder(String endpoint, String token) {

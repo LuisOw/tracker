@@ -12,6 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.example.tracker3.adapter.ResearchAdapter;
 import com.example.tracker3.domain.Research;
@@ -19,6 +25,7 @@ import com.example.tracker3.domain.User;
 import com.example.tracker3.util.ClickListener;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
+import com.example.tracker3.workers.UsageTrackerWorker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,6 +34,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,11 +45,13 @@ import okhttp3.Response;
 public class ResearchActivity extends BaseActivity implements ClickListener {
 
     private static final String TAG = "ResearchActivity";
+    private String UNIQUE_WORKER = "usageTrackerWorker";
     ArrayList<Research> researches;
     private User user;
     private String jwtToken;
     private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +75,13 @@ public class ResearchActivity extends BaseActivity implements ClickListener {
         localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
         client = new OkHttpClient();
+        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+        PeriodicWorkRequest usageTimeWorkRequest =
+                new PeriodicWorkRequest
+                        .Builder(UsageTrackerWorker.class, 1, TimeUnit.DAYS)
+                        .setConstraints(constraints)
+                        .build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(UNIQUE_WORKER, ExistingPeriodicWorkPolicy.KEEP, usageTimeWorkRequest);
     }
 
 

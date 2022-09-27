@@ -11,10 +11,10 @@ public class Question implements Serializable {
     private int id;
     private int order;
     private String query;
-    private QuestionType type;
+    private String type;
     private ArrayList<Alternative> alternatives;
 
-    public Question(int id, int order, String query, QuestionType type, ArrayList<Alternative> alternatives) {
+    public Question(int id, int order, String query, String type, ArrayList<Alternative> alternatives) {
         this.id = id;
         this.order = order;
         this.query = query;
@@ -46,11 +46,11 @@ public class Question implements Serializable {
         this.query = query;
     }
 
-    public QuestionType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(QuestionType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

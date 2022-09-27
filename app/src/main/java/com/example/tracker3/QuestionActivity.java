@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tracker3.domain.Alternative;
 import com.example.tracker3.domain.Question;
 import com.example.tracker3.domain.User;
-import com.example.tracker3.fragments.QuestionFragment;
-import com.example.tracker3.util.ClickListener;
+import com.example.tracker3.fragments.DescriptiveAlternativeFragment;
+import com.example.tracker3.fragments.MultipleAlternativeFragment;
 import com.example.tracker3.util.HttpRequest;
-import com.example.tracker3.util.LoggingInterceptor;
+import com.example.tracker3.util.QuestionType;
 import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,9 +29,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,7 +37,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class QuestionActivity extends BaseActivity implements QuestionFragment.OnItemSelectedListener {
+public class QuestionActivity extends BaseActivity implements MultipleAlternativeFragment.OnItemSelectedListener,
+        DescriptiveAlternativeFragment.OnItemSelectedListener{
 
     private static final String TAG = "QuestionActivity";
     ArrayList<Question> questions;
@@ -66,6 +65,7 @@ public class QuestionActivity extends BaseActivity implements QuestionFragment.O
         Type type = new TypeToken<Collection<Question>>(){}.getType();
         Collection<Question> questionnaireCollection = gson.fromJson(questionsAsJson, type);
         this.questions = new ArrayList<>(questionnaireCollection);
+        Log.e(TAG, "Questions size = " + questions.size());
 
         localSharesPreferences = getSharedPreferences("account" , Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
@@ -79,19 +79,29 @@ public class QuestionActivity extends BaseActivity implements QuestionFragment.O
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         String questionText;
         ArrayList<Alternative> alternatives = new ArrayList<>();
+        Fragment fragment;
         if (this.questions.isEmpty()) {
             questionText = "Questionário não possui questões";
+            fragment = MultipleAlternativeFragment
+                    .newInstance(questionText, alternatives);
         } else {
             Question question = this.questions.get(listId);
             questionText = question.getQuery();
             alternatives = question.getAlternatives();
             Log.e(TAG, "Question: "+ question);
+            if (question.getType().equals("descrivita")) {
+                fragment = DescriptiveAlternativeFragment.newInstance(questionText,
+                        alternatives.get(0).getId());
+            } else {
+                fragment = MultipleAlternativeFragment
+                        .newInstance(questionText, alternatives);
+            }
         }
-        QuestionFragment questionFragment = QuestionFragment
-                .newInstance(questionText, alternatives);
-        fragmentTransaction.replace(R.id.placeholder, questionFragment);
+        fragmentTransaction.replace(R.id.placeholder, fragment);
         fragmentTransaction.commit();
     }
+
+
 
     @Override
     public void addAlternativesToList(Alternative alternative) {
@@ -100,14 +110,34 @@ public class QuestionActivity extends BaseActivity implements QuestionFragment.O
         alternativesMap.put("alternative_chosen", String.valueOf(alternative.getValue()));
         alternativesMap.put("alternative_id", alternative.getId());
         selectedAlternatives.add(alternativesMap);
+        processNextQuestion();
+    }
+
+    @Override
+    public void addDescriptiveToList(String answer, int alternativeId) {
+        Map<String, Object> alternativesMap = new HashMap<>();
+        alternativesMap.put("text", "");
+        alternativesMap.put("alternative_chosen", answer);
+        alternativesMap.put("alternative_id", alternativeId);
+        selectedAlternatives.add(alternativesMap);
+        processNextQuestion();
+    }
+
+    private void processNextQuestion() {
         listId++;
         if (questions.size() > listId) {
             Question question = this.questions.get(listId);
             Log.e(TAG, "Question: "+ question);
-            QuestionFragment questionFragment = QuestionFragment
-                    .newInstance(question.getQuery(), question.getAlternatives());
+            Fragment fragment;
+            if (question.getType().equals("descritiva")) {
+                fragment = DescriptiveAlternativeFragment
+                        .newInstance(question.getQuery(), question.getAlternatives().get(0).getId());
+            } else {
+                fragment = MultipleAlternativeFragment
+                        .newInstance(question.getQuery(), question.getAlternatives());
+            }
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.placeholder, questionFragment);
+            fragmentTransaction.replace(R.id.placeholder, fragment);
             fragmentTransaction.commit();
         } else {
             Log.e(TAG, "post alternatives answers");

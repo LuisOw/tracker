@@ -1,7 +1,6 @@
 package com.example.tracker3.fragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QuestionFragment extends Fragment implements View.OnClickListener {
+public class MultipleAlternativeFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "QuestionFragment";
 
@@ -37,8 +36,8 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
         void addAlternativesToList(Alternative alternative);
     }
 
-    public static QuestionFragment newInstance(String questionText, ArrayList<Alternative> alternatives) {
-        QuestionFragment fragment = new QuestionFragment();
+    public static MultipleAlternativeFragment newInstance(String questionText, ArrayList<Alternative> alternatives) {
+        MultipleAlternativeFragment fragment = new MultipleAlternativeFragment();
         Log.e(TAG, "question alternatives newInstance" + alternatives);
         Bundle args = new Bundle();
         args.putString("questionText", questionText);
@@ -68,7 +67,7 @@ public class QuestionFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.question_fragment, container, false);
+        return inflater.inflate(R.layout.alternative_fragment, container, false);
     }
 
     @Override

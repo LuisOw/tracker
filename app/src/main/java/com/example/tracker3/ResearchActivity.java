@@ -75,13 +75,13 @@ public class ResearchActivity extends BaseActivity implements ClickListener {
         localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
         client = new OkHttpClient();
-        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+        /*Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
         PeriodicWorkRequest usageTimeWorkRequest =
                 new PeriodicWorkRequest
                         .Builder(UsageTrackerWorker.class, 1, TimeUnit.DAYS)
                         .setConstraints(constraints)
                         .build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(UNIQUE_WORKER, ExistingPeriodicWorkPolicy.KEEP, usageTimeWorkRequest);
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(UNIQUE_WORKER, ExistingPeriodicWorkPolicy.KEEP, usageTimeWorkRequest);*/
     }
 
 

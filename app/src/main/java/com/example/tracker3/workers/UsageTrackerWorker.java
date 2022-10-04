@@ -3,17 +3,12 @@ package com.example.tracker3.workers;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.tracker3.QuestionActivity;
-import com.example.tracker3.QuestionnaireActivity;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.FieldNamingPolicy;
@@ -24,6 +19,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -56,8 +53,16 @@ public class UsageTrackerWorker extends Worker {
         endMillis = System.currentTimeMillis();
         Map<String, UsageStats> lUsageStatsMap = mUsageStatsManager.
                 queryAndAggregateUsageStats(startMillis, endMillis);
-        String collectedTime = gson.toJson(lUsageStatsMap);
         Map<String, String> answerMap = new HashMap<>();
+        StringBuilder aws = new StringBuilder();
+        Set<String> lUsageSet = lUsageStatsMap.keySet();
+        for (String name : lUsageSet) {
+            if (Objects.requireNonNull(lUsageStatsMap.get(name)).getTotalTimeInForeground() > 0) {
+                aws.append(name).append(": ");
+                aws.append(timeConvert(lUsageStatsMap.get(name).getTotalTimeInForeground())).append("\n");
+            }
+        }
+        String collectedTime = gson.toJson(aws);
         answerMap.put("collected_time", collectedTime);
 
         SharedPreferences localSharesPreferences = getApplicationContext().getSharedPreferences("account" , Context.MODE_PRIVATE);
@@ -76,6 +81,14 @@ public class UsageTrackerWorker extends Worker {
             public void onResponse(@NonNull Call call, @NonNull Response response){
             }
         });
+    }
 
+    private String timeConvert(long totalTime) {
+
+        long seconds = (totalTime/1000)%60;
+        long minutes = (totalTime/(1000*60))%60;
+        long hours = (totalTime/(1000*60*60))%24;
+
+        return hours + ":" + minutes + ":" + seconds;
     }
 }

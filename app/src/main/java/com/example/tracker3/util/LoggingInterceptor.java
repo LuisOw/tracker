@@ -21,7 +21,7 @@ public class LoggingInterceptor implements Interceptor {
         Request request = chain.request();
         Buffer buffer = new Buffer();
         request.body().writeTo(buffer);
-        Log.e(TAG, "Request = " + buffer.readUtf8());
+        Log.e(TAG, "Request = " + buffer.readUtf8() + "Headers = " + request.headers());
         Response response = chain.proceed(request);
         Log.e(TAG, "logging " + response.headers());
         Log.e(TAG, "logging2 " + response.body());

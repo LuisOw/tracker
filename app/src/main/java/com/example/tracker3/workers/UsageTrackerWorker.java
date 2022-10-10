@@ -57,9 +57,11 @@ public class UsageTrackerWorker extends Worker {
         StringBuilder aws = new StringBuilder();
         Set<String> lUsageSet = lUsageStatsMap.keySet();
         for (String name : lUsageSet) {
-            if (Objects.requireNonNull(lUsageStatsMap.get(name)).getTotalTimeInForeground() > 0) {
-                aws.append(name).append(": ");
-                aws.append(timeConvert(lUsageStatsMap.get(name).getTotalTimeInForeground())).append("\n");
+            if (Objects.equals(name, "com.example.tracker3")) {
+                if (Objects.requireNonNull(lUsageStatsMap.get(name)).getTotalTimeInForeground() > 0) {
+                    aws.append(name).append(": ");
+                    aws.append(timeConvert(lUsageStatsMap.get(name).getTotalTimeInForeground())).append("\n");
+                }
             }
         }
         String collectedTime = gson.toJson(aws);

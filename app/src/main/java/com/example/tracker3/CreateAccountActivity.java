@@ -21,6 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -66,7 +68,12 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     public void createAccount(String username, String password){
-        Request request = HttpRequest.localAuthBuilder(username, password, HttpRequest.NEW_ACCOUNT_ENDPOINT);
+        Map<String, String> requestMap = new HashMap<>();
+        requestMap.put("username", username);
+        requestMap.put("password", password);
+        requestMap.put("chosen_name", "");
+        String json = gson.toJson(requestMap);
+        Request request = HttpRequest.postRequestBuilderWithoutHeader(HttpRequest.NEW_ACCOUNT_ENDPOINT, json);
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -108,7 +115,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 200) {
                     Intent intent = new Intent(CreateAccountActivity.this, ResearchActivity.class);
-                    intent.putExtra("json", Objects.requireNonNull(response.body()).string());
+                    intent.putExtra("researches", Objects.requireNonNull(response.body()).string());
                     startActivity(intent);
                 } else {
                     Log.e(TAG, "actual code: " + response.code());

@@ -1,6 +1,8 @@
 package com.example.tracker3.util;
 
 
+import android.util.Log;
+
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -38,7 +40,14 @@ public class HttpRequest {
         return new Request.Builder()
                 .url(endpoint)
                 .addHeader("Authorization","Bearer " + token)
-                .post(RequestBody.create(MEDIA_TYPE_JSON, json))
+                .post(RequestBody.create(json, MEDIA_TYPE_JSON))
+                .build();
+    }
+
+    public static Request postRequestBuilderWithoutHeader(String endpoint, String json) {
+        return new Request.Builder()
+                .url(endpoint)
+                .post(RequestBody.create(json, MEDIA_TYPE_JSON))
                 .build();
     }
 
@@ -51,6 +60,7 @@ public class HttpRequest {
                 .add("client_id", "")
                 .add("client_secret", "")
                 .build();
+        Log.e(TAG, "contentType of requestBody = " + requestBody.contentType());
         return new Request.Builder().url(url).post(requestBody).build();
     }
 

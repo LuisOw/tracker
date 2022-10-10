@@ -18,6 +18,7 @@ import com.example.tracker3.domain.User;
 import com.example.tracker3.fragments.DescriptiveAlternativeFragment;
 import com.example.tracker3.fragments.MultipleAlternativeFragment;
 import com.example.tracker3.util.HttpRequest;
+import com.example.tracker3.util.LoggingInterceptor;
 import com.example.tracker3.util.QuestionType;
 import com.example.tracker3.util.SharedPreferencesUtils;
 import com.google.gson.Gson;
@@ -56,7 +57,7 @@ public class QuestionActivity extends BaseActivity implements MultipleAlternativ
         super.onCreate(savedInstanceState);
         Log.e(TAG, "onCreate question");
 
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor()).build();
         Gson gson = new Gson();
         srcIntent = getIntent();
         String questionsAsJson = srcIntent.getStringExtra("questions");
@@ -89,7 +90,7 @@ public class QuestionActivity extends BaseActivity implements MultipleAlternativ
             questionText = question.getQuery();
             alternatives = question.getAlternatives();
             Log.e(TAG, "Question: "+ question);
-            if (question.getType().equals("descrivita")) {
+            if (question.getType().equals("descritiva")) {
                 fragment = DescriptiveAlternativeFragment.newInstance(questionText,
                         alternatives.get(0).getId());
             } else {

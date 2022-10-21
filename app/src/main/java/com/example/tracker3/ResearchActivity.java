@@ -1,8 +1,11 @@
 package com.example.tracker3;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +25,7 @@ import androidx.work.WorkRequest;
 import com.example.tracker3.adapter.ResearchAdapter;
 import com.example.tracker3.domain.Research;
 import com.example.tracker3.domain.User;
+import com.example.tracker3.receivers.MyBroadcastReceiver;
 import com.example.tracker3.util.ClickListener;
 import com.example.tracker3.util.HttpRequest;
 import com.example.tracker3.util.SharedPreferencesUtils;
@@ -32,6 +36,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -51,11 +56,14 @@ public class ResearchActivity extends BaseActivity implements ClickListener {
     private String jwtToken;
     private SharedPreferences localSharesPreferences;
     private OkHttpClient client;
+    private PendingIntent alarmIntent;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.e(TAG, String.valueOf(Build.VERSION.SDK_INT));
 
         Gson gson = new Gson();
         Intent intent = getIntent();
@@ -75,13 +83,23 @@ public class ResearchActivity extends BaseActivity implements ClickListener {
         localSharesPreferences = getSharedPreferences("account" ,Context.MODE_PRIVATE);
         this.jwtToken = localSharesPreferences.getString(SharedPreferencesUtils.TOKEN_KEY, "");
         client = new OkHttpClient();
-        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-        PeriodicWorkRequest usageTimeWorkRequest =
-                new PeriodicWorkRequest
-                        .Builder(UsageTrackerWorker.class, 4, TimeUnit.HOURS)
-                        .setConstraints(constraints)
-                        .build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(UNIQUE_WORKER, ExistingPeriodicWorkPolicy.KEEP, usageTimeWorkRequest);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+            Intent intentForAlarm = new Intent(this, MyBroadcastReceiver.class);
+            alarmIntent = PendingIntent.getBroadcast(this, 0, intentForAlarm, PendingIntent.FLAG_IMMUTABLE);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 30);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+        } else {
+            Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+            PeriodicWorkRequest usageTimeWorkRequest =
+                    new PeriodicWorkRequest
+                            .Builder(UsageTrackerWorker.class, 1, TimeUnit.DAYS)
+                            .setConstraints(constraints)
+                            .build();
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(UNIQUE_WORKER, ExistingPeriodicWorkPolicy.KEEP, usageTimeWorkRequest);
+        }
     }
 
 

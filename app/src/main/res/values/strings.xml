@@ -128,6 +128,7 @@
     <string name="com_auth0_domain">dev-tepbuwil.us.auth0.com</string>
     <string name="search_new_research">Buscar nova pesquisa para participar</string>
     <string name="your_answer">Sua resposta</string>
+    <string name="warning">NÃO USE DADOS REAIS EM NENHUM DOS CAMPOS ABAIXO</string>
 
 
 </resources>

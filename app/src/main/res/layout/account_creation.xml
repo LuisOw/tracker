@@ -17,6 +17,16 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/tv_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="monospace"
+            android:text="@string/warning"
+            android:textColor="@color/red"
+            android:textSize="28sp" />
+
+        <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
